@@ -51,9 +51,10 @@ onMount(() => {
 
 <p>This example demonstrates running Rust/Wasm compiled for WASI (the Web
 Assembly System Interface) in the browser using <a
-href="https://github.com/wasmerio/wasmer-js">WasmerJS</a>.</p>
+href="https://github.com/wasmerio/wasmer-js">WasmerJS</a>. The source code is at <a
+href="https://github.com/happybeing/svelte-wasi-with-rust">svelte-wasi-with-rust</a></p>
 
-The project is based on the <a
+The svelte-wasi-with-rust project is based on the <a
 href="https://github.com/happybeing/svelte-wasm-terminal-test">svelte-wasm-terminal-test</a>
 which shows how to run WASI in the browser uing wasm-terminal from WasmerJS.
 <div id="#root" name="#root"></div> </main>
