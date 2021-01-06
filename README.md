@@ -1,5 +1,7 @@
 # Svelte Rust/WASI in Browser Example
 
+**Status:** WORK IN PROGRESS - this does NOT yet do the following
+
 This example demonstrates running Rust/Wasm compiled for WASI (the Web Assembly System Interface) in the browser using [WasmerJS]("https://github.com/wasmerio/wasmer-js).
 
 The project is based on the [Svelte WASI in Browser Example](https://github.com/happybeing/svelte-wasm-terminal-test) which shows how to run WASI in the browser uing wasm-terminal from WasmerJS.
