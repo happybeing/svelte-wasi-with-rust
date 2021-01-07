@@ -1,45 +1,69 @@
 <script>
-export let greet;	// Rust wasm (build using wasm-pack, so not WASI)
-
 import {onMount} from "svelte"
 
-import WasmTerminal, { fetchCommandFromWAPM } from "@wasmer/wasm-terminal";
-import { lowerI64Imports } from "@wasmer/wasm-transformer";
+import { WASI } from '@wasmer/wasi'
+import browserBindings from '@wasmer/wasi/lib/bindings/browser'
+import { WasmFs } from '@wasmer/wasmfs'
 
-// Handler for the fetchCommand property of the WasmTerminal Config.
-const fetchCommandHandler = async ({args}) => {
-  let commandName = args[0];
-  // Return a "CallbackCommand" if our command matches a special name
-  if (commandName === "callback-command") {
-    const callbackCommand = async (options, wasmFs) => {
-      return `Callback Command Working! Options: ${options}, fs: ${wasmFs}`;
-    };
-    return callbackCommand;
-  }
-
-  // Fetch a wasm Binary from WAPM for the command name.
-  const wasmBinary = await fetchCommandFromWAPM({args});
-
-  // lower i64 imports from Wasi Modules, so that most Wasi modules
-  // Can run in a Javascript context.
-  return await lowerI64Imports(wasmBinary);
-};
+const wasmFilePath = '/helloworld.wasm'  // Path to our WASI module
+const echoStr      = 'Hello World!'    // Text string to echo
 
 onMount(() => {
-	// Create our Wasm Terminal
-	const wasmTerminal = new WasmTerminal({
-		// Function that is run whenever a command is fetched
-		fetchCommand: fetchCommandHandler
-	});
-	
-	// Print out our initial message
-	wasmTerminal.print("Hello World!");
-	
-	// Bind our Wasm terminal to it's container
-	const containerElement = document.getElementById("#root");
-	wasmTerminal.open(containerElement);
-	wasmTerminal.fit();
-	wasmTerminal.focus();
+
+	// Instantiate new WASI and WasmFs Instances
+	// IMPORTANT:
+	// Instantiating WasmFs is only needed when running in a browser.
+	// When running on the server, NodeJS's native FS module is assigned by default
+	const wasmFs = new WasmFs()
+
+	let wasi = new WASI({
+	// Arguments passed to the Wasm Module
+	// The first argument is usually the filepath to the executable WASI module
+	// we want to run.
+	args: [wasmFilePath, echoStr],
+
+	// Environment variables that are accesible to the WASI module
+	env: {},
+
+	// Bindings that are used by the WASI Instance (fs, path, etc...)
+	bindings: {
+		...browserBindings,
+		fs: wasmFs.fs
+	}
+	})
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Async function to run our WASI module/instance
+	const startWasiTask =
+	async pathToWasmFile => {
+		// Fetch our Wasm File
+		let response  = await fetch(pathToWasmFile)
+		let wasmBytes = new Uint8Array(await response.arrayBuffer())
+
+		// IMPORTANT:
+		// Some WASI module interfaces use datatypes that cannot yet be transferred
+		// between environments (for example, you can't yet send a JavaScript BigInt
+		// to a WebAssembly i64).  Therefore, the interface to such modules has to
+		// be transformed using `@wasmer/wasm-transformer`, which we will cover in
+		// a later example
+
+		// Instantiate the WebAssembly file
+		let wasmModule = await WebAssembly.compile(wasmBytes);
+		let instance = await WebAssembly.instantiate(wasmModule, {
+		...wasi.getImports(wasmModule)
+		});
+
+		wasi.start(instance)                      // Start the WASI instance
+		let stdout = await wasmFs.getStdOut()     // Get the contents of stdout
+
+		const containerElement = document.getElementById("#stdout");
+		containerElement.innerText = `${stdout}`;
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Everything starts here
+	startWasiTask(wasmFilePath)
+
 });
 	
 // Later, when we are done with the terminal, destroy it
@@ -47,17 +71,20 @@ onMount(() => {
 </script>
 
 <main>
-<h1>Svelte Rust/WASI Example.</h1>
+<h1>Svelte WasmerJS/WASI Example.</h1>
 
-<p>This example demonstrates running Rust/Wasm compiled for WASI (the Web
-Assembly System Interface) in the browser using <a
+<p>This example uses Web Assembly compiled for WASI (the Web
+Assembly System Interface) running in the browser using <a
 href="https://github.com/wasmerio/wasmer-js">WasmerJS</a>. The source code is at <a
 href="https://github.com/happybeing/svelte-wasi-with-rust">svelte-wasi-with-rust</a></p>
 
-The svelte-wasi-with-rust project is based on the <a
-href="https://github.com/happybeing/svelte-wasm-terminal-test">svelte-wasm-terminal-test</a>
-which shows how to run WASI in the browser uing wasm-terminal from WasmerJS.
-<div id="#root" name="#root"></div> </main>
+<p>To do: add a Rust/WASI component</p>
+<h2>Content from WASI</h2>
+<p>
+	<b>Standard output:</b>
+	<span id="#stdout" name="#root"></span> 
+</p>
+</main>
 
 <style>
 	main {
