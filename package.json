@@ -2,8 +2,13 @@
   "name": "svelte-wasi-with-rust",
   "version": "1.0.0",
   "scripts": {
+    "build-wasm": "cd src/rust-wasi-example/ && cargo build --release --target=wasm32-wasi && mkdir -p ../../public/wasm && cp target/wasm32-wasi/release/wasi-example.wasm ../../public/wasm/",
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "webpack-dev-server --content-base public"
+
+    "dev-wasm": "cd src/rust-wasi-example/ && cargo build --target=wasm32-wasi && mkdir -p ../../public/wasm && cp target/wasm32-wasi/debug/wasi-example.wasm ../../public/wasm/",
+    "dev": "webpack-dev-server --watch-content-base --content-base public",
+
+    "watchhack": "while true ; do inotifywait -qm --event modify -r --format '' src/rust-wasi-example/src/ | yarn dev-wasm; done &"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
