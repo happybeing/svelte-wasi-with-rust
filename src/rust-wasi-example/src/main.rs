@@ -1,3 +1,5 @@
+use wasm_bindgen::prelude::*;
+
 use std::fs;
 use std::io::Read;
 use structopt::StructOpt;
@@ -18,7 +20,45 @@ struct Opt {
     ninety_nine_bottles: bool,
 }
 
-fn print_hello_world() {
+// #[wasm_bindgen]
+// pub fn runtest() -> Result<(), JsValue> {
+//     // set_panic_hook();
+
+//     println!("runtest called!\n");
+//     // // ...
+//     // let p: web_sys::Node = document.create_element("p")?.into();
+//     // p.set_text_content(Some("Hello from Rust, WebAssembly, and Webpack!"));
+//     // // ...
+
+//     Ok(())
+// }
+
+#[wasm_bindgen(module = "test")]
+extern "C" {
+    fn js_test();
+    // fn js_test_n(n: u32);
+ }
+
+#[wasm_bindgen]
+pub fn rust_js_test() {
+    println!("Rust calling js_test()...\n");
+    js_test();
+
+    // println!("Rust calling js_test_n(123)...\n");
+    // js_test_n(123);
+}
+
+#[wasm_bindgen]
+pub fn rust_print_bg() {
+    println!("Hello, world BG!\n");
+}
+
+// #[no_mangle]
+// pub fn rust_print_nm() {
+//     println!("Hello, world NM!\n");
+// }
+
+pub fn print_hello_world() {
     println!("Hello, world!\n");
 }
 
@@ -43,40 +83,42 @@ fn run(source_code: String) {
     }
 }
 
+// Note:    For WebAssembly to call Rust exports (above), main() must be empty.
+//          You can do one or the other, but not both.
 fn main() {
-    let opt = Opt::from_args();
+    // let opt = Opt::from_args();
 
-    if opt.hello_world {
-        print_hello_world();
-        return;
-    }
+    // if opt.hello_world {
+    //     print_hello_world();
+    //     return;
+    // }
 
-    if opt.ninety_nine_bottles {
-        print_nintey_nine_bottles_of_beer_on_the_wall();
-        return;
-    }
+    // if opt.ninety_nine_bottles {
+    //     print_nintey_nine_bottles_of_beer_on_the_wall();
+    //     return;
+    // }
 
-    if let Some(src) = opt.source_code {
-        run(src);
-        return;
-    }
-    if let Some(src_file) = opt.source_file {
-        match fs::File::open(&src_file) {
-            Ok(mut src_file_handle) => {
-                let mut buf = String::new();
-                src_file_handle
-                    .read_to_string(&mut buf)
-                    .expect(&format!("Failed to read data from file: {}", &src_file));
-                run(buf);
-            }, 
-            Err(e) => {
-                println!("Error: {}", e);
-                eprintln!(
-                    "Error: please pass HQ9+ source code via the `-e` flag or as a file via the `-f` flag"
-                );
-        //         ::std::process::exit(-1);
-            }
-        }
-    }
+    // if let Some(src) = opt.source_code {
+    //     run(src);
+    //     return;
+    // }
+    // if let Some(src_file) = opt.source_file {
+    //     match fs::File::open(&src_file) {
+    //         Ok(mut src_file_handle) => {
+    //             let mut buf = String::new();
+    //             src_file_handle
+    //                 .read_to_string(&mut buf)
+    //                 .expect(&format!("Failed to read data from file: {}", &src_file));
+    //             run(buf);
+    //         }, 
+    //         Err(e) => {
+    //             println!("Error: {}", e);
+    //             eprintln!(
+    //                 "Error: please pass HQ9+ source code via the `-e` flag or as a file via the `-f` flag"
+    //             );
+    //     //         ::std::process::exit(-1);
+    //         }
+    //     }
+    // }
 }
 

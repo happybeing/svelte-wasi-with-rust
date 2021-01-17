@@ -2,6 +2,8 @@
 /public/bundle.*
 /public/wasm/
 
+/src/wasi-example*
+
 .DS_Store
 
 target/

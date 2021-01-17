@@ -4,14 +4,22 @@ import {onMount} from "svelte"
 import { WASI } from '@wasmer/wasi'
 import browserBindings from '@wasmer/wasi/lib/bindings/browser'
 import { WasmFs } from '@wasmer/wasmfs'
+import * as test from './test'
+
+// wasm-bindgen test
+// import * as rust from './wasi-example_bg'
+// rust.then(m => {
+// 	m.rust_print_hello_world()
+// });
+
 
 // Example 1 from the Wasmer.io docs
 // const wasmFilePath = '/helloworld.wasm'  // Prints string param to stdout (from Wasmer.io docs)
 // const echoStr      = 'Hello World!'    // Text string to echo
 
 // Example 2 calls the hQ9+ Rust example
-const wasmFilePath = '/wasm/wasi-example.wasm'	// The hQ9+ Rust example
- 
+// const wasmFilePath = '/wasm/wasi-example.wasm'	// The hQ9+ Rust example
+const wasmFilePath = '/wasm/wasi-example_bg.wasm'	// The hQ9+ Rust example
 
 let output = "";
 
@@ -31,7 +39,8 @@ let wasi = new WASI({
 
 	// For example 2:
 	// args: [wasmFilePath, "-e 'HQ9+'"],	// Shows control as CLI parameter
-	args: [wasmFilePath, "-fHQ9.txt"],	// Shows control from a file 
+	// args: [wasmFilePath, "-fHQ9.txt"],	// Shows control from a file 
+	args: [wasmFilePath, "-e 'H'"],	// Test
 
 	// Environment variables that are accesible to the WASI module
 	env: {},
@@ -60,9 +69,15 @@ const startWasiTask = async (pathToWasmFile) => {
 
 	// Instantiate the WebAssembly file
 	let wasmModule = await WebAssembly.compile(wasmBytes);
+	let imports = wasi.getImports(wasmModule);	// Imports to WASM from Rust/WASI
+	imports = {test,...imports};				// Imports to WASM from JS
 	let instance = await WebAssembly.instantiate(wasmModule, {
-	...wasi.getImports(wasmModule)
+		...imports
 	});
+
+	// let instance = await WebAssembly.instantiate(wasmModule, {
+	// 	test,...wasi.getImports(wasmModule)
+	// });
 
 	// Sync write is easy:
 	// wasmFs.fs.writeFileSync("HQ9.txt", "HHHH+Q", 'utf8', callback);
@@ -94,8 +109,13 @@ const startWasiTask = async (pathToWasmFile) => {
 		}
 	});
 
-	wasi.start(instance)                      // Start the WASI instance
-	output = await wasmFs.getStdOut()
+	wasi.start(instance)                      	// Start the WASI instance. Note: Rust main(){} must be empty
+	instance.exports.rust_js_test();			// Rust calling back to JS (js_test())
+
+	// instance.exports.rust_print_nm();		// Rust '#[no_mangle]'
+	instance.exports.rust_print_bg();			// Rust '#[wasm_bindgen]'
+	output = await wasmFs.getStdOut();
+	console.log(output);
 
 	await wasmFs.fs.readdir('/', (e, files) => {
 		if (e) console.log("error:", e);
