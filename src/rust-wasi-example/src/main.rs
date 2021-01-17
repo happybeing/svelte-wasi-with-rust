@@ -29,14 +29,13 @@ struct Opt {
 //     // let p: web_sys::Node = document.create_element("p")?.into();
 //     // p.set_text_content(Some("Hello from Rust, WebAssembly, and Webpack!"));
 //     // // ...
-
 //     Ok(())
 // }
 
 #[wasm_bindgen(module = "test")]
 extern "C" {
     fn js_test();
-    // fn js_test_n(n: u32);
+    fn js_test_n(n: u32);
  }
 
 #[wasm_bindgen]
@@ -44,8 +43,8 @@ pub fn rust_js_test() {
     println!("Rust calling js_test()...\n");
     js_test();
 
-    // println!("Rust calling js_test_n(123)...\n");
-    // js_test_n(123);
+    println!("Rust calling js_test_n(123)...\n");
+    js_test_n(123);
 }
 
 #[wasm_bindgen]
