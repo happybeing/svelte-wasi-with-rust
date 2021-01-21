@@ -1,16 +1,22 @@
 # Svelte Rust/WASI in Browser Example
 
-This example demonstrates running Rust/Wasm compiled for WASI (the Web Assembly System Interface) in the browser using [WasmerJS]("https://github.com/wasmerio/wasmer-js).
+This example uses Rust Web Assembly compiled for WASI (the Web Assembly
+System Interface) running in the browser using [WasmerJS]("https://github.com/wasmerio/wasmer-js).
 
-For a non-Rust example and Svelte + Wasmer/WASI template see [simple-svelte-wasmer-webpack]{https://github.com/happybeing/simple-svelte-wasmer-webpack} which was used as the starting point for this project.
+Rust is compiled for target `wasm32-wasi` and bindings are generated using
+`wasm-bindgen` plus a small amount of post-processing to adapt the bindings for
+WASI.
+
+For a non-Rust example and Svelte + Wasmer/WASI template see [simple-svelte-wasmer-webpack]{https://github.com/happybeing/simple-svelte-wasmer-webpack} which was the starting point for this project.
 
 ## Features
-- [x] A Svelte WASI app with Rust subsystem
-- [x] Rust and JS can access same wasmFS filesystem (temp disabled in Rust)
-- [x] JS can call Rust (no params)
-- [x] Rust can call JS (no params)
-- [ ] Add passing params, return values using wasm-bindgen
+- A Svelte WASM/WASI app with Rust subsystem (using target `wasm32-wasi`)
+- JavaScript and Rust both accessing the WasmerJS/wasmFS filesystem
+- Calling Rust from JavaScript and vice versa using `wasm-bindgen+`
+- Passing and returning JavaScript and Rust native types with no mucking about
+- Passing and returning JavaScript objects and arrays to/from Rust structs
 
+Note: `wasm-bindgen+` indicates a small amount of post-processing to make the `wasm-bindgen` output suitable for use with WasmerJS in the browser.
 # Instructions
 
 ## Prerequisites
