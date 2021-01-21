@@ -217,7 +217,7 @@ WASI. Source code is at
 	<p> Note: wasm-bindgen+ indicates a small amount of post-processing to make
 	the wasm-bindgen output suitable for use with WasmerJS in the browser. </p>
 
-	<p>Check the browser console and the contend below for test output.</p>
+	<p>Check the browser console and the content below for test output.</p>
 	<h2>Content from WASI</h2>
 		<h3>stdout:</h3>
 		<p>{output}</p>
