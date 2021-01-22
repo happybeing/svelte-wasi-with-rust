@@ -15,7 +15,7 @@ const options = yargs
             }
 
             // Replace wasm import with a setter function
-            let initWasi = "let wasm;\nexport function initWasm(w){ wasm = w; }";
+            let initWasi = "let wasm;\nexport function setBindingsWasm(w){ wasm = w; }";
             data = data.replace(/import \* as wasm from \'.\/.*\.wasm\'\;/, initWasi);
 
             // Change value of module_name to path
