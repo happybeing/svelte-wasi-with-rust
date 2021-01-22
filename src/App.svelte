@@ -64,7 +64,7 @@ const startWasiTask = async (pathToWasmFile) => {
 	// Imports for WASI:
 	// - test.js JavaScript exports for Rust
 	// - wasm-bindgen Rust exports for JavaScript 
-	imports = {test,...{'./wasi-example_bg.js': await import('./wasi-example_bg_wasi_test')},...imports};
+	imports = {test,...{'./wasi-example_bg.js': await import('./wasi-example_bg_wasi')},...imports};
 
 	let instance = await WebAssembly.instantiate(wasmModule, {
 		...imports
@@ -107,7 +107,7 @@ const startWasiTask = async (pathToWasmFile) => {
 	});
 
 	wasi.start(instance)                      	// Start the WASI instance. Note: Rust main(){} must be empty
-	wasm.initWasm(instance.exports);			// Provide Rust implementations to JS Rust bindings
+	wasm.setBindingsWasm(instance.exports);		// Provide Rust implementations to JS Rust bindings
 
 	// -------------------------------------------------------------
 	// Misc Tests: some output to console in JS, others to WASI stdout in Rust
