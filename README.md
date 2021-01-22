@@ -93,14 +93,14 @@ cargo install wasm-bindgen-cli
 **Note:** make sure `wasm-bindgen --version` matches the version of the `wasm-bingen` module in `Cargo.toml` (/src/rust-wasi-example/Cargo.toml). If the versions don't match after doing `cargo install wasm-bindgen-cli && wasm-bindgen --version`, modify the version referred to in `Cargo.toml` to match the CLI.
 
 You should only need the first and second parts of the version to match, so for example `wasm-bindgen --version` of 'wasm-bindgen 0.2.69' should work fine with Cargo.toml 'wasm-bindgen = "^0.2"').
-## Build
+## Get the Code
 If you don't have `yarn` use `npm run` instead of `yarn` in the following:
 ```bash
 git clone https://github.com/happybeing/svelte-wasi-with-rust
 cd svelte-wasi-with-rust
 yarn && yarn dev-wasm-bindgen && yarn dev
 ```
-Once the build completes you can visit the app at localhost:8080.
+Once the development build completes you can visit the app at localhost:8080.
 
 # Builds
 ## Release
