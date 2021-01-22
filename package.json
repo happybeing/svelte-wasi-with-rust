@@ -2,14 +2,17 @@
   "name": "svelte-wasi-with-rust",
   "version": "1.0.0",
   "scripts": {
-    "build-wasm": "cd src/rust-wasi-example/ && cargo build --release --target=wasm32-wasi && mkdir -p ../../public/wasm && cp target/wasm32-wasi/release/wasi-example.wasm ../../public/wasm/",
-    "build": "cross-env NODE_ENV=production webpack",
-    "dev-wasm": "cd src/rust-wasi-example/ && cargo build --target=wasm32-wasi && mkdir -p ../../public/wasm && cp target/wasm32-wasi/debug/wasi-example.wasm ../../public/wasm/",
-    "dev-wasm-bindgen": "yarn dev-wasm && wasm-bindgen src/rust-wasi-example/target/wasm32-wasi/debug/wasi-example.wasm --debug --keep-debug  --out-dir . && yarn wbg-to-wasi && mv *.wasm public/wasm/ && mv wasi-* src && yarn dev-wasm",
+    "build": "yarn build-wasm-bindgen && yarn build-app",
+    "build-app": "cross-env NODE_ENV=production webpack",
+    "build-wasm-bindgen": "yarn build-wasm && wasm-bindgen src/rust-wasi-example/target/wasm32-wasi/release/wasi-example.wasm --browser --out-dir . && yarn wbg-to-wasi && mv *.wasm public/wasm/ && mv wasi-* src",
+    "build-wasm": "cd src/rust-wasi-example/ && cargo build --release --target=wasm32-wasi && mkdir -p ../../public/wasm",
+
     "dev": "webpack-dev-server --watch-content-base --content-base public",
-    "wbg-to-wasi": "./scripts/wbg_to_wasi.js wasi-example_bg.js wasi-example_bg_wasi.js",
-    "watch-wasm": "while true ; do inotifywait -qm --event modify @src/rust-wasi-example/target -r --format '' src/rust-wasi-example/ | yarn dev-wasm; done",
-    "watch-wasm-bindgen": "while true ; do inotifywait -qm --event modify @src/rust-wasi-example/target -r --format '' src/rust-wasi-example/ | yarn dev-wasm-bindgen; done"
+    "dev-wasm": "cd src/rust-wasi-example/ && cargo build --target=wasm32-wasi && mkdir -p ../../public/wasm && cp target/wasm32-wasi/debug/wasi-example.wasm ../../public/wasm/",
+    "dev-wasm-bindgen": "yarn dev-wasm && wasm-bindgen src/rust-wasi-example/target/wasm32-wasi/debug/wasi-example.wasm --debug --keep-debug  --out-dir . && yarn wbg-to-wasi && mv *.wasm public/wasm/ && mv wasi-* src",
+    "watch-wasm-bindgen": "while true ; do inotifywait -qm --event modify @src/rust-wasi-example/target -r --format '' src/rust-wasi-example/ | yarn dev-wasm-bindgen; done",
+
+    "wbg-to-wasi": "./scripts/wbg_to_wasi.js wasi-example_bg.js wasi-example_bg_wasi.js"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -23,9 +26,5 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1",
     "yargs": "^16.2.0"
-  },
-  "dependencies": {
-    "@wasmer/wasm-terminal": "^0.12.0",
-    "@wasmer/wasm-transformer": "^0.12.0"
   }
 }

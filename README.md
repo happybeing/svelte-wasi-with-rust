@@ -69,20 +69,20 @@ let instance = await WebAssembly.instantiate(wasmModule, {
 	...imports
 });
 ```
-Finally, you call provide the wasm module to the JavaScript bindings immediately after the call to `wasi.start(...)`:
+Finally, provide the wasm module to the JavaScript bindings immediately after the call to `wasi.start(...)`:
 ```javascript
 wasi.start(instance);
 wasm.setBindingsWasm(instance.exports);
 ```
 
-That's it. From there on you can make calls to WASM via the bindings using the `wasm` import './wasi-example_bg_wasi.js':
+That's it. From there on you can make calls to WASM via the bindings using the `wasm` import './wasi-example_bg_wasi.js'. For example:
 ```javascript
 wasm.rust_print_bg_n(256);  // Call Rust, print number to stdout
 ```
 # Setup
 
 ## Prerequisites
-As well as Node.js and of course Rust you need the Rust `wasm32-wasi` target:
+As well as NodeJS and Rust you need the Rust `wasm32-wasi` target:
 ```bash
 rustup target add wasm32-wasi
 ```
@@ -90,9 +90,9 @@ And the `wasm-bindgen` CLI:
 ```bash
 cargo install wasm-bindgen-cli
 ```
-**Note:** make sure the version of `wasm-bindgen --version` matches the `wasm-bingen` module in `Cargo.toml` (/src/rust-wasi-example/Cargo.toml). If the versions don't match after doing `cargo install wasm-bindgen-cli && wasm-bindgen --version`, modify the version referred to in `Cargo.toml` to match that of the the CLI.
+**Note:** make sure `wasm-bindgen --version` matches the version of the `wasm-bingen` module in `Cargo.toml` (/src/rust-wasi-example/Cargo.toml). If the versions don't match after doing `cargo install wasm-bindgen-cli && wasm-bindgen --version`, modify the version referred to in `Cargo.toml` to match the CLI.
 
-You should only need the first and second parts of the version to match so for example, `wasm-bindgen --version` of 'wasm-bindgen 0.2.69' should work fine with Cargo.toml 'wasm-bindgen = "^0.2"').
+You should only need the first and second parts of the version to match, so for example `wasm-bindgen --version` of 'wasm-bindgen 0.2.69' should work fine with Cargo.toml 'wasm-bindgen = "^0.2"').
 ## Build
 If you don't have `yarn` use `npm run` instead of `yarn` in the following:
 ```bash
@@ -102,17 +102,25 @@ yarn && yarn dev-wasm-bindgen && yarn dev
 ```
 Once the build completes you can visit the app at localhost:8080.
 
-# Development
+# Builds
+## Release
+To build for release:
+```bash
+yarn build
+```
+To test, use `yarn serve public` and visit `localhost:5000`
+
+To deploy, upload everything in /public
+## Development
 
 The App code is in `src/App.svelte` and the Rust subsystem is in `src/rust-wasi-example`.
-
-## Watching builds
+## Development Builds
 In Linux, you can use `inotify` to re-build the app on changes to the Rust subsystem as follows.
 In one terminal watch and re-build the app with:
 ```bash
 yarn dev
 ```
-In a second terminal watch and re-build the Rust subsystem with:
+To re-build the wasm you can use either `yarn dev-wasm-bindgen` or if you have installed `inotify` on Linux you can watch and re-build the Rust subsystem with:
 ```bash
 yarn watch-wasm-bindgen
 ```
