@@ -103,7 +103,7 @@ yarn && yarn dev-wasm-bindgen && yarn dev
 Once the development build completes you can visit the app at localhost:8080.
 
 # Builds
-## Release
+## Release Builds
 To build for release:
 ```bash
 yarn build
@@ -111,16 +111,23 @@ yarn build
 To test, use `yarn serve public` and visit `localhost:5000`
 
 To deploy, upload everything in /public
-## Development
+## Development Builds
 
 The App code is in `src/App.svelte` and the Rust subsystem is in `src/rust-wasi-example`.
-## Development Builds
-In Linux, you can use `inotify` to re-build the app on changes to the Rust subsystem as follows.
-In one terminal watch and re-build the app with:
+
+To re-build the wasm and serve the result:
+```bash
+yarn dev-wasm-bindgen
+yarn dev
+```	
+
+If you have `inotifywait` (e.g. on Linux) you can use `yarn dev` and `yarn watch-wasm-bindgen` together, and changes to any part of the app including the Rust subsystem will automatically re-build everything and reload the browser.
+
+To do this, in one terminal watch and re-build the app with:
 ```bash
 yarn dev
 ```
-To re-build the wasm you can use either `yarn dev-wasm-bindgen` or if you have installed `inotify` on Linux you can watch and re-build the Rust subsystem with:
+Then in another terminal, watch and re-build the Rust subsystem with:
 ```bash
 yarn watch-wasm-bindgen
 ```
