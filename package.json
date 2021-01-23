@@ -6,15 +6,15 @@
     "build-app": "cross-env NODE_ENV=production webpack",
     "build-wasm-bindgen": "yarn build-wasm && wasm-bindgen src/rust-wasi-example/target/wasm32-wasi/release/wasi-example.wasm --browser --out-dir . && yarn wbg-to-wasi && mv *.wasm public/wasm/ && mv wasi-* src",
     "build-wasm": "cd src/rust-wasi-example/ && cargo build --release --target=wasm32-wasi && mkdir -p ../../public/wasm",
-
     "dev": "webpack-dev-server --watch-content-base --content-base public",
     "dev-wasm": "cd src/rust-wasi-example/ && cargo build --target=wasm32-wasi && mkdir -p ../../public/wasm",
     "dev-wasm-bindgen": "yarn dev-wasm && wasm-bindgen src/rust-wasi-example/target/wasm32-wasi/debug/wasi-example.wasm --debug --keep-debug  --out-dir . && yarn wbg-to-wasi && mv *.wasm public/wasm/ && mv wasi-* src",
     "watch-wasm-bindgen": "while true ; do inotifywait -qm --event modify @src/rust-wasi-example/target -r --format '' src/rust-wasi-example/ | yarn dev-wasm-bindgen; done",
-
     "wbg-to-wasi": "./scripts/wbg_to_wasi.js wasi-example_bg.js wasi-example_bg_wasi.js"
   },
   "devDependencies": {
+    "@wasmer/wasi": "^0.12.0",
+    "@wasmer/wasmfs": "^0.12.0",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
     "mini-css-extract-plugin": "^0.6.0",
