@@ -2,7 +2,7 @@
 /public/bundle.*
 /public/wasm/
 
-/src/wasi-example*
+/src/rust-wasi*js
 
 .DS_Store
 

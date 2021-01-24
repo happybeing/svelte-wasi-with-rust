@@ -1,9 +1,8 @@
 [package]
-name = "wasi-example"
+name = "rust-wasi"
 version = "0.1.0"
-description = "A tool for executing HQ9+ source code to demo WASI"
-authors = ["The Wasmer Engineering Team <engineering@wasmer.io>"]
-repository = "https://github.com/wasmerio/rust-wasi-example"
+description = "Demo/template for Rust/WASI on WasmerJS using wasm-bindgen"
+authors = ["happybeing"]
 edition = "2018"
 
 [dependencies]
