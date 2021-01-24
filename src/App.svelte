@@ -19,15 +19,7 @@ let output = "";
 const wasmFs = new WasmFs()
 
 let wasi = new WASI({
-	// Arguments passed to the Wasm Module
-	// The first argument is usually the filepath to the executable WASI module
-	// we want to run.
-
-	// Earlier examples which passed parameters to Rust main() for the HQ9+ WasmerJS example
-	// args: [wasmFilePath, "-e 'HQ9+'"],	// Shows control as CLI parameter
-	// args: [wasmFilePath, "-fHQ9.txt"],	// Shows control from a file 
-
-	args: [wasmFilePath],	// To call functions main() must be empty, so params not needed here
+	args: [wasmFilePath],	// Rust main() must be empty so params not needed here
 
 	// Environment variables that are accesible to the WASI module
 	env: {},
@@ -39,9 +31,6 @@ let wasi = new WASI({
 	},
 	preopens: {'/': '/', '.': '.'},	// Necessary for the Rust app can access wasmFs (example 2)
 })
-
-// let wasi_snapshot_preview1 = wasi.wasi_snapshot_preview1;
-// window.wasi_snapshot_preview1 = wasi_snapshot_preview1;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Async function to run our WASI module/instance
@@ -62,7 +51,7 @@ const startWasiTask = async (pathToWasmFile) => {
 	let imports = wasi.getImports(wasmModule);	// Imports to WASM from Rust/WASI
 
 	// Imports for WASI:
-	// - js-wasi/test.js JavaScript exports for Rust
+	// - js-wasi/jsWasi.js JavaScript exports for Rust
 	// - wasm-bindgen Rust exports for JavaScript 
 	imports = {jsWasi,...{'./rust-wasi_bg.js': await import('./rust-wasi_bg_wasi')},...imports};
 
