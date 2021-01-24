@@ -4,8 +4,8 @@ import {onMount} from "svelte"
 import { WASI } from '@wasmer/wasi'
 import browserBindings from '@wasmer/wasi/lib/bindings/browser'
 import { WasmFs } from '@wasmer/wasmfs'
-import * as test from './js-wasi/test.js'
-import { SomeJsType } from './js-wasi/test.js'
+import * as jsWasi from './js-wasi/jsWasi.js'
+import { SomeJsType } from './js-wasi/jsWasi.js'
 import * as wasm from './rust-wasi_bg_wasi.js'
 
 const wasmFilePath = '/wasm/rust-wasi_bg.wasm' // Several Rust/WASI examples using wasm-bindgen
@@ -62,9 +62,9 @@ const startWasiTask = async (pathToWasmFile) => {
 	let imports = wasi.getImports(wasmModule);	// Imports to WASM from Rust/WASI
 
 	// Imports for WASI:
-	// - test.js JavaScript exports for Rust
+	// - js-wasi/test.js JavaScript exports for Rust
 	// - wasm-bindgen Rust exports for JavaScript 
-	imports = {test,...{'./rust-wasi_bg.js': await import('./rust-wasi_bg_wasi')},...imports};
+	imports = {jsWasi,...{'./rust-wasi_bg.js': await import('./rust-wasi_bg_wasi')},...imports};
 
 	let instance = await WebAssembly.instantiate(wasmModule, {
 		...imports

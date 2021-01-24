@@ -23,7 +23,7 @@ fn main() {}
 // -------------------------------------------------------------
 // Misc tests
 
-#[wasm_bindgen(module = "test")]
+#[wasm_bindgen(module = "jsWasi")]
 extern "C" {
     fn js_test();
     fn js_test_n(n: u32);
