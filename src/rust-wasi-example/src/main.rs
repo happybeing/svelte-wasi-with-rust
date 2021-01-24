@@ -12,7 +12,7 @@ fn main() {}
 // pub fn runtest() -> Result<(), JsValue> {
 //     // set_panic_hook();
 
-//     println!("runtest called!\n");
+//     println!("runtest called!");
 //     // // ...
 //     // let p: web_sys::Node = document.create_element("p")?.into();
 //     // p.set_text_content(Some("Hello from Rust, WebAssembly, and Webpack!"));
@@ -32,21 +32,21 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn rust_js_test() {
-    println!("Rust calling js_test()...\n");
+    println!("Rust calling js_test()...");
     js_test();
 
-    println!("Rust calling js_test_n(123)...\n");
+    println!("Rust calling js_test_n(123)...");
     js_test_n(123);
 }
 
 #[wasm_bindgen]
 pub fn rust_print_bg() {
-    println!("Hello, world BG!\n");
+    println!("Hello, world BG!");
 }
 
 #[wasm_bindgen]
 pub fn rust_print_bg_n(n: u32) {
-    println!("From rust_print_bg_n(n): {}\n", n);
+    println!("From rust_print_bg_n(n): {}", n);
 }
 
 #[wasm_bindgen]
@@ -216,12 +216,12 @@ pub fn return_option_imported_type() -> Option<SomeJsType> {
 //
 
 fn print_hello_world() {
-    println!("Hello, world!\n");
+    println!("Hello, world!");
 }
 
 fn print_nintey_nine_bottles_of_beer_on_the_wall() {
     for i in (1..100).rev() {
-        println!("{} bottles of beer on the wall,\n{} bottles of beer.\nTake one down, pass it around,\n{} bottles of beer on the wall.", i, i, i - 1);
+        println!("{} bottles of beer on the wall,{} bottles of beer.Take one down, pass it around,{} bottles of beer on the wall.", i, i, i - 1);
     }
 }
 
@@ -233,7 +233,7 @@ fn h9q_run(source_code: String) {
         match c {
             'H' => print_hello_world(),
             '9' => print_nintey_nine_bottles_of_beer_on_the_wall(),
-            'Q' => println!("{}\n", source_code),
+            'Q' => println!("{}", source_code),
             '+' => accumulator += 1,
             _ => (),
         }

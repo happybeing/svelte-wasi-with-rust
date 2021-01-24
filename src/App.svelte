@@ -120,6 +120,7 @@ const startWasiTask = async (pathToWasmFile) => {
 	instance.exports.rust_print_bg();			// Rust '#[wasm_bindgen]'
 	output = await wasmFs.getStdOut();
 	console.log(output);
+	output = output.split('\n');
 
 	// -------------------------------------------------------------
 	console.log("** Example from https://github.com/ibaryshnikov/rust-workshop-21-dec-2018 **");
@@ -220,7 +221,7 @@ WASI. Source code is at
 	<p>Check the browser console and the content below for test output.</p>
 	<h2>Content from WASI</h2>
 		<h3>stdout:</h3>
-		<p>{output}</p>
+		<p> {#each output as line} {line}<br/> {/each} </p>
 </main>
 
 <style>
