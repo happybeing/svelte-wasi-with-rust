@@ -1,6 +1,6 @@
 {
   "name": "svelte-wasi-with-rust",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "scripts": {
     "build": "rm -f public/wasm/* && yarn build-wasm-bindgen && yarn build-app",
     "build-app": "cross-env NODE_ENV=production webpack",
